@@ -1,0 +1,59 @@
+FUNCTION precedence(ch):
+    IF ch is '+' OR '-':
+        RETURN 1
+    ELSE IF ch is '*' OR '/':
+        RETURN 2
+    ELSE IF ch is '^':
+        RETURN 3
+    ELSE:
+        RETURN -1
+
+FUNCTION isOperand(ch):
+    RETURN true if ch is a letter OR digit
+
+FUNCTION infixToPostfix(expression):
+    result ← empty string
+    stack ← empty stack
+
+    FOR each character ch in expression:
+        IF isOperand(ch):
+            append ch to result
+        ELSE IF ch == '(':
+            push ch onto stack
+        ELSE IF ch == ')':
+            WHILE stack not empty AND top of stack != '(':
+                pop from stack and append to result
+            pop '(' from stack
+        ELSE:   // operator
+            WHILE stack not empty AND precedence(top of stack) >= precedence(ch):
+                pop from stack and append to result
+            push ch onto stack
+
+    WHILE stack not empty:
+        pop from stack and append to result
+
+    RETURN result
+
+FUNCTION reverse(string):
+    RETURN string reversed
+
+FUNCTION swapBrackets(expression):
+    FOR each character in expression:
+        IF character == '(':
+            replace with ')'
+        ELSE IF character == ')':
+            replace with '('
+    RETURN modified expression
+
+FUNCTION infixToPrefix(expression):
+    reversed ← reverse(expression)
+    swapped ← swapBrackets(reversed)
+    postfix ← infixToPostfix(swapped)
+    RETURN reverse(postfix)
+
+MAIN:
+    READ input expression
+    postfix ← infixToPostfix(expression)
+    prefix ← infixToPrefix(expression)
+    PRINT postfix
+    PRINT prefix
